@@ -1,18 +1,19 @@
 const baseEndpoint = 'https://api.github.com';
 const usersEndpoint = `${baseEndpoint}/users`;
-const $n = document.querySelector('.name'); // Se cambia el selector 'name' por '.name' para seleccionar el elemento con la clase 'name'
-const $b = document.querySelector('.blog'); // Se cambia el selector 'blog' por '.blog' para seleccionar el elemento con la clase 'blog'
-const $l = document.querySelector('.location'); // Se agrega el selector para seleccionar el elemento con la clase 'location'
+const $n = document.querySelector('.name');
+const $b = document.querySelector('.blog');
+const $l = document.querySelector('.location');
+const $button = document.querySelector('.button'); // Seleccionamos el botón
 
 async function displayUser(username) {
-  $n.textContent = 'cargando...';
+  $n.textContent = 'Cargando...';
   try {
     const response = await fetch(`${usersEndpoint}/${username}`);
     const data = await response.json();
     console.log(data);
-    $n.textContent = data.name;
-    $b.textContent = data.blog;
-    $l.textContent = data.location;
+    $n.textContent = data.name || 'Nombre no disponible';
+    $b.textContent = data.blog || 'Blog no disponible';
+    $l.textContent = data.location || 'Ubicación no disponible';
   } catch (err) {
     handleError(err);
   }
@@ -21,7 +22,11 @@ async function displayUser(username) {
 function handleError(err) {
   console.log('OH NO!');
   console.log(err);
-  $n.textContent = `Algo salió mal: ${err.message}`; // Se reemplaza 'n' por '$n' para referenciar correctamente al elemento con la clase 'name'
+  $n.textContent = 'Algo salió mal: ' + err.message;
 }
+
+$button.addEventListener('click', function () {
+  displayUser('stolinski'); // Llamamos a la función displayUser al hacer clic en el botón
+});
 
 displayUser('stolinski').catch(handleError);
